@@ -2,8 +2,9 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 
-const char* ssid = "test";          // Declare hotspot SSID
-const char* password = "password";  // Declare hotspot password
+const char* ssid = "test";          // Declare access point SSID
+const char* password = "password";  // Declare access point password
+int pinLED = 2;                     // Declare LED pin (GPIO2)
 ESP8266WebServer server(80);        // Declare server (port 80)
 
 void setup() {
@@ -19,11 +20,20 @@ void setup() {
   server.on("/", handleRoot);                   // Server content to root
   server.begin();                               // Start server
   Serial.println("HTTP server started!");       // Print text
+
+  // Set up LED pin:
+  pinMode(pinLED, OUTPUT);                      // Set as output pin
 }
 
 void loop() {
   // Operate server:
-  server.handleClient();  // Handle incoming client requests
+  server.handleClient();      // Handle incoming client requests
+
+  // Operate LED:
+  digitalWrite(pinLED, HIGH); // Turn LED on
+  delay(1000);                // Wait 1 second
+  digitalWrite(pinLED, LOW);  // Turn LED off
+  delay(1000);                // Wait 1 second
 }
 
 void handleRoot() {
